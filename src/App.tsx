@@ -2,6 +2,7 @@ import Route from './components/Route';
 import Link from './components/Link';
 import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
+import RecentlyAdded from './components/RecentlyAdded';
 
 
 function App() {
@@ -9,6 +10,10 @@ function App() {
     <Link to='/addWords'>To add words page</Link>
 
     <Link to='/dictionary'>To dictionary page</Link>
+
+    <Route path='/'>
+      <RecentlyAdded />
+    </Route>
 
     <Route path='/addWords'>
       <AddWordsPage />
