@@ -2,13 +2,21 @@ import Route from './components/Route';
 import Link from './components/Link';
 import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
+import FileDownloadForm from './components/FileDownloadForm';
 
 
 function App() {
   return <div>
-    <Link to='/addWords'>To add words page</Link>
+    <Route path='/'>
+      <div className='flex gap-x-8 mb-[45px]'>
+        <Link to='/addWords' className='bg-[#9476FE] text-lg text-white p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
+        <Link to='/dictionary' className='bg-[#9476FE] text-lg text-white p-[8px_70px] rounded-lg'>Словарь</Link>
+      </div>
 
-    <Link to='/dictionary'>To dictionary page</Link>
+      <div className='flex gap-x-8'>
+        <FileDownloadForm />
+      </div>
+    </Route>
 
     <Route path='/addWords'>
       <AddWordsPage />
