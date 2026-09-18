@@ -3,6 +3,7 @@ import Link from './components/Link';
 import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
 import FileDownloadForm from './components/FileDownloadForm';
+import RecentlyAdded from './components/RecentlyAdded';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       </div>
 
       <div className='flex gap-x-8'>
+        <RecentlyAdded />
         <FileDownloadForm />
       </div>
     </Route>
