@@ -10,6 +10,7 @@ interface AddWordsFormInput {
 function AddWordsForm() {
   const [wordIdx, setWordIdx] = useState(1); // Хранит в себе индекс текущего слова, если пользователь захочет добавить более 1 нового слова внутри формы
   const [dynamicRenderedInputs, setdynamicRenderedInputs] = useState<React.ReactElement[] | null>(null);
+  
   const { register, handleSubmit } = useForm<AddWordsFormInput>();
   const onSubmit: SubmitHandler<AddWordsFormInput> = (data) => console.log(data);
 
@@ -25,8 +26,14 @@ function AddWordsForm() {
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>
-    <input {...register('word')} placeholder='Введите слово' required />
+    <input 
+      {...register('word')}
+      placeholder='Введите слово' 
+      required 
+    />
+    
     {dynamicRenderedInputs}
+    
     <button type='button' onClick={handleClick}>Добавить +1 слово</button>
 
     <button type='submit'>Сохранить</button>

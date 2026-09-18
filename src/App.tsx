@@ -2,17 +2,22 @@ import Route from './components/Route';
 import Link from './components/Link';
 import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
+import FileDownloadForm from './components/FileDownloadForm';
 import RecentlyAdded from './components/RecentlyAdded';
 
 
 function App() {
   return <div>
-    <Link to='/addWords'>To add words page</Link>
-
-    <Link to='/dictionary'>To dictionary page</Link>
-
     <Route path='/'>
-      <RecentlyAdded />
+      <div className='flex gap-x-8 mb-[45px]'>
+        <Link to='/addWords' className='bg-[#9476FE] text-lg text-white p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
+        <Link to='/dictionary' className='bg-[#9476FE] text-lg text-white p-[8px_70px] rounded-lg'>Словарь</Link>
+      </div>
+
+      <div className='flex gap-x-8'>
+        <RecentlyAdded />
+        <FileDownloadForm />
+      </div>
     </Route>
 
     <Route path='/addWords'>
