@@ -6,18 +6,31 @@ import { twMerge } from 'tailwind-merge';
 interface LinkProps {
   to: string,
   children: React.ReactNode,
+  primary?: boolean,
   className?: string,
   activeClassName?: string,
   rest?: string,
 }
 
-function Link({ to, children, className, activeClassName, ...rest }: LinkProps) {
+function Link({
+  to,
+  children, 
+  primary, 
+  className, 
+  activeClassName, 
+  ...rest
+}: LinkProps) {
   const { navigate, currentPath }: NavigationContextType = useNavigation();
 
   const classes:string = twMerge(
     classNames(
       rest.className,
       'text-blue-500',
+
+      {
+        "bg-(--primary-color) text-white rounded-lg p-[7px_28px] text-lg": primary,
+      },
+
       className,
       currentPath === to && activeClassName
     ));
