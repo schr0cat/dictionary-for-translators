@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+:root {
+  --primary-color: #9476fe;
+  --white-color: #fff;
+  --gray-color: #464646;
+  --light-gray-color: #e8e8e8;
+  --blue-color: #4f40d8;
+} 
+/* TODO: заменить конкретные названия цветов на переменные в файлах, где эти цвета используются */
+
+.container {
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
