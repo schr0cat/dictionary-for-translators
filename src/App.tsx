@@ -4,10 +4,13 @@ import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
 import FileDownloadForm from './components/FileDownloadForm';
 import RecentlyAdded from './components/RecentlyAdded';
+import Header from './components/Header';
 
 
 function App() {
-  return <div className='container'>
+  return <>
+    <Header></Header>
+
     <Route path='/'>
       <div className='flex gap-x-8 mb-[45px]'>
         <Link to='/addWords' className='bg-[#9476FE] text-lg text-white p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
@@ -27,7 +30,7 @@ function App() {
     <Route path='/dictionary'>
       <DictionaryPage />
     </Route>
-  </div>
+  </>
 }
 
 export default App
