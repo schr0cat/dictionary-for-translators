@@ -7,7 +7,7 @@ import RecentlyAdded from './components/RecentlyAdded';
 
 
 function App() {
-  return <div>
+  return <div className='container'>
     <Route path='/'>
       <div className='flex gap-x-8 mb-[45px]'>
         <Link to='/addWords' className='bg-[#9476FE] text-lg text-white p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
