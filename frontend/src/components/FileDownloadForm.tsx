@@ -19,9 +19,6 @@ function FileDownloadForm() {
 
     const res = await fetch('http://localhost:3010/upload-files', {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
       body: formData,
       mode: "cors"
     });

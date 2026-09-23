@@ -1,5 +1,5 @@
 const express = require('express');
-import fileupload from "express-fileupload";
+const fileupload = require('express-fileupload');
 const app = express()
 const path = require('path');
 const port = 3010
@@ -28,8 +28,30 @@ app.get('/', (req, res) => {
 })
 
 app.post('/upload-files', (req, res) => {
-  console.log(req.body);
-  res.send('Все файлы были успешно получены');
+  try {
+    if (!req.files) {
+      res.send({
+        status: 'failed',
+        message: 'Файлы не были загружены'
+      });
+    } else {
+      let files = req.files;
+
+      // TODO: подправить проблему с названиями файлов. Когда файлы приходят на сервер, он не всегда правильно интерпретирует все символы в их названиях
+
+      for (let file in files) {
+        files[file].mv('./uploads/' + files[file].name);
+      };
+
+      res.send({
+        status: 'success',
+        message: 'Файл(ы) успешно загружены'
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 });
 
 app.listen(port, () => {
