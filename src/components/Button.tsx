@@ -27,7 +27,7 @@ function Button({
 }: ButtonProps) {
   const classes: string = twMerge(
     classNames(rest.className, "flex items-center px-3 py-1.5 border", {
-      "bg-(--primary-color) text-white rounded-lg py-2 text-lg": primary,
+      "bg-(--color-primary) text-white rounded-lg py-2 text-lg": primary,
       "border-gray-900 bg-gray-900 text-white": secondary,
       "border-green-500 bg-green-500 text-white": success,
       "border-yellow-400 bg-yellow-400 text-white": warning,

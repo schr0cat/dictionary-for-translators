@@ -13,8 +13,8 @@ function App() {
 
     <Route path='/'>
       <div className='flex gap-x-8 mb-[45px]'>
-        <Link to='/addWords' className='bg-[#9476FE] text-lg text-white p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
-        <Link to='/dictionary' className='bg-[#9476FE] text-lg text-white p-[8px_70px] rounded-lg'>Словарь</Link>
+        <Link to='/addWords' className='bg-(--color-primary) text-lg text-(--color-white) p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
+        <Link to='/dictionary' className='bg-(--color-primary) text-lg text-(--color-white) p-[8px_70px] rounded-lg'>Словарь</Link>
       </div>
 
       <div className='flex gap-x-8'>

@@ -28,7 +28,7 @@ function Link({
       'text-blue-500',
 
       {
-        "bg-(--primary-color) text-white rounded-lg p-[7px_28px] text-lg": primary,
+        "bg-(--color-primary) text-(--color-white) rounded-lg p-[7px_28px] text-lg": primary,
       },
 
       className,
