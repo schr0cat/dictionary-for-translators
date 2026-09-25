@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+// Сохранение полученных pdf/docx файлов 
 app.post('/upload-files', (req, res) => {
   try {
     if (!req.files) {
@@ -52,6 +53,12 @@ app.post('/upload-files', (req, res) => {
     console.log(error);
     res.status(500).send(error);
   }
+});
+
+app.post('/add-words', (req, res) => {
+  const data = req.body;
+  console.log(data);
+  res.send('Слова получены');
 });
 
 app.listen(port, () => {
