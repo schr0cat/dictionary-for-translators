@@ -19,15 +19,14 @@ function AddWordsForm() {
       data.push(formData[word]);
     };
 
-    console.log(data);
-
-    const res = fetch('http://localhost:3010/add-words', {
+    fetch('http://localhost:3010/add-words', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-      .then(result => result.text())
+      .then(result => result.json())
       .then(result => console.log(result))
+      .catch(err => console.error(err))
   };
 
   const handleClick = () => {

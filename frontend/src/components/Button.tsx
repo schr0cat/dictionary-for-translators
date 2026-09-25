@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
+import type { ComponentProps } from 'react'
 
-
-interface ButtonProps {
+interface ButtonProps extends ComponentProps<'button'> {
   children: string | React.ReactSVGElement,
   primary?: boolean,
   secondary?: boolean,
@@ -11,7 +11,6 @@ interface ButtonProps {
   danger?: boolean,
   outline?: boolean,
   rounded?: boolean,
-  rest?: string,
 };
 
 function Button({
