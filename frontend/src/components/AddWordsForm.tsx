@@ -12,7 +12,23 @@ function AddWordsForm() {
   const [dynamicRenderedInputs, setdynamicRenderedInputs] = useState<React.ReactElement[] | null>(null);
   
   const { register, handleSubmit } = useForm<AddWordsFormInput>();
-  const onSubmit: SubmitHandler<AddWordsFormInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<AddWordsFormInput> = (formData) => {
+    const data: string[] = [];
+
+    for (const word in formData) {
+      data.push(formData[word]);
+    };
+
+    console.log(data);
+
+    const res = fetch('http://localhost:3010/add-words', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(result => result.text())
+      .then(result => console.log(result))
+  };
 
   const handleClick = () => {
     const inputs: React.ReactElement[] = Array.isArray(dynamicRenderedInputs) ? [...dynamicRenderedInputs] : []; // Если в переменной dynamicRenderedInputs хранится массив, то переменная inputs будет массивом со значениями старого массива. Если dynamicRenderedInputs это null, тогда inputs будет пустым массивом.
