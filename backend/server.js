@@ -35,6 +35,7 @@ app.post('/upload-files', (req, res) => {
         status: 'failed',
         message: 'Файлы не были загружены'
       });
+
     } else {
       let files = req.files;
 
@@ -51,14 +52,58 @@ app.post('/upload-files', (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({
+      status: 'serverError',
+      message: error
+    });
   }
 });
 
 app.post('/add-words', (req, res) => {
-  const data = req.body;
-  console.log(data);
-  res.send('Слова получены');
+  try {
+    const words = req.body;
+
+    let isShortWords = false; // Переменная для проверки на слова с недопустимым кол-вом символов
+
+    if (typeof words === 'object') { // если полученные данные - это объект
+      const wordsLength = Object.keys(words).length;
+      if (wordsLength === 0) { // если его длина 0 - отправляем сообщение об ошибке
+        res.json({
+          status: 'failed',
+          message: 'Отправлено 0 слов'
+        }) 
+      } else {
+        for (let key in words) {
+          if (words[key].length < 2) {
+            isShortWords = true;
+            break;
+          };
+        };
+
+        if (isShortWords) { // если есть короткие слова, отправляем сообщение об этом
+          res.json({
+            status: 'failed',
+            message: 'Среди добавленных слов есть 1 или более недопустимой длины (менее 2 символов)'
+          })
+        } else {
+
+
+          res.json({  // если все проверки пройдены, отправляем кол-во полученных слов
+            status: 'success',
+            message: `Получено ${wordsLength} слов(о)`
+          });
+        }
+      }
+    } else {
+      res.json({
+        status: 'failed',
+        message: 'Отправлен не массив'
+      })
+    };
+
+  } catch (error) {
+    res.status(500).send(error)
+  };
 });
 
 app.listen(port, () => {
