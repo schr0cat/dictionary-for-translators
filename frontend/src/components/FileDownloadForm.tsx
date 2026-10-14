@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form'
-// import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import ToastNotification from './ToastNotification';
+import { useState } from 'react';
 
 interface FileDownloadFormInput {
   files: FileList;
@@ -9,6 +11,9 @@ interface FileDownloadFormInput {
 
 function FileDownloadForm() {
   const { register, handleSubmit } = useForm<FileDownloadFormInput>();
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationText, setNotificationText] = useState('') ;
+  const [status, setStatus] = useState('');
 
   const onSubmit: SubmitHandler<FileDownloadFormInput> = async (data) => {
     const formData = new FormData();
@@ -22,9 +27,26 @@ function FileDownloadForm() {
       body: formData,
       mode: "cors"
     });
-    const resText = await res.text();
-    console.log(resText)
+    const resData = await res.json();
+    console.log(resData)
+
+    setShowNotification(true);
+
+    if (resData.status === 'success') {
+      setStatus('success')
+      setNotificationText('Файл(ы) успешно загружены');
+    } else if (resData.status === 'failed') {
+      setStatus('failed')
+      setNotificationText('Файлы не были загружены');
+    } else if (resData.status === 'serverError') {
+      setStatus('serverError')
+      setNotificationText('Ошибка сервера');
+    }
+
+    setTimeout(() => setShowNotification(false), 3000);
   };
+
+  // TODO: переделать код показа уведомления на более лаконичный
 
   return <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
     <input 
@@ -35,6 +57,24 @@ function FileDownloadForm() {
     /> 
 
     <button type='submit'>Отправить</button>
+
+    {
+      showNotification && status === 'success' && createPortal(
+        <ToastNotification success>{notificationText}</ToastNotification>,
+        document.body)
+    }
+
+    {
+      showNotification && status === 'failed' && createPortal(
+        <ToastNotification error>{notificationText}</ToastNotification>,
+        document.body)
+    }
+
+    {
+      showNotification && status === 'serverError' && createPortal(
+        <ToastNotification error>{notificationText}</ToastNotification>,
+        document.body)
+    }
   </form>
 };
 
