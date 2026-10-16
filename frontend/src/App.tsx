@@ -5,6 +5,7 @@ import DictionaryPage from './pages/DictionaryPage';
 import FileDownloadForm from './components/FileDownloadForm';
 import RecentlyAdded from './components/RecentlyAdded';
 import Header from './components/Header';
+import RegistrationPage from './pages/RegistrationPage';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path='/'>
         <div className='flex gap-x-8 mb-[45px]'>
           <Link to='/addWords' className='bg-(--color-primary) text-lg text-(--color-white) p-[8px_28px] rounded-lg'>Добавить слово/слова</Link>
+          
           <Link to='/dictionary' className='bg-(--color-primary) text-lg text-(--color-white) p-[8px_70px] rounded-lg'>Словарь</Link>
         </div>
 
@@ -30,6 +32,10 @@ function App() {
 
       <Route path='/dictionary'>
         <DictionaryPage />
+      </Route>
+
+      <Route path='/registration'>
+        <RegistrationPage />
       </Route>
     </div>
   </>

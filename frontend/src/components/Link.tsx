@@ -2,33 +2,37 @@ import classNames from 'classnames';
 import useNavigation from '../hooks/use-navigation';
 import type { NavigationContextType } from '../context/navigation';
 import { twMerge } from 'tailwind-merge';
+import type { ComponentProps } from 'react'
 
-interface LinkProps {
+interface LinkProps extends ComponentProps<'a'> {
   to: string,
   children: React.ReactNode,
   primary?: boolean,
+  secondary?: boolean,
   className?: string,
   activeClassName?: string,
-  rest?: string,
 }
 
 function Link({
   to,
   children, 
-  primary, 
+  primary,
+  secondary,
   className, 
   activeClassName, 
   ...rest
 }: LinkProps) {
   const { navigate, currentPath }: NavigationContextType = useNavigation();
 
-  const classes:string = twMerge(
+  const classes: string = twMerge(
     classNames(
       rest.className,
-      'text-blue-500',
+      'text-blue-500 p-[7px_28px]',
 
       {
-        "bg-(--color-primary) text-(--color-white) rounded-lg p-[7px_28px] text-lg": primary,
+        "bg-(--color-primary) text-(--color-white) rounded-lg text-lg": primary,
+
+        "bg-green-500 text-(--color-white)": secondary
       },
 
       className,
