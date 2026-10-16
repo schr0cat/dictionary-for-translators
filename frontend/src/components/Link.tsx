@@ -18,7 +18,6 @@ function Link({
   children, 
   primary,
   secondary,
-  className, 
   activeClassName, 
   ...rest
 }: LinkProps) {
@@ -26,7 +25,6 @@ function Link({
 
   const classes: string = twMerge(
     classNames(
-      rest.className,
       'text-blue-500 p-[7px_28px]',
 
       {
@@ -35,7 +33,8 @@ function Link({
         "bg-green-500 text-(--color-white)": secondary
       },
 
-      className,
+      rest.className,
+
       currentPath === to && activeClassName
     ));
 
