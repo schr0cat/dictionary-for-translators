@@ -7,7 +7,6 @@ type InputProps<T extends FieldValues> = {
   children: string,
   label: FieldPath<T>,
   register: UseFormRegister<T>,
-  type: string,
   required: boolean,
 } & Omit<ComponentPropsWithoutRef<'input'>, 'name' | 'onChange' | 'onBlur'>
 
@@ -17,7 +16,6 @@ function Input<T extends FieldValues>({
   children, 
   label, 
   register, 
-  type, 
   required, 
   ...rest 
 }: InputProps<T>) {
@@ -25,7 +23,7 @@ function Input<T extends FieldValues>({
 
   return <>
     <label>{children}</label>
-    <input {...rest} {...register(label, {required})} type={type} className={inputClasses} />
+    <input {...rest} {...register(label, {required})} className={inputClasses} />
   </>
 };
 

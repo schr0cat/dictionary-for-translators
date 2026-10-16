@@ -14,6 +14,17 @@ function RegistrationForm() {
 
   const onSubmit: SubmitHandler<RegistrationFormInput> = async (data) => {
     console.log(data);
+
+    fetch('http://localhost:3010/new-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(result => result.json())
+      .then(result => console.log(result))
+      .catch(err => console.error(err))
   };
 
   return <form onSubmit={handleSubmit(onSubmit)} className='block'>
@@ -44,6 +55,7 @@ function RegistrationForm() {
         label='password'
         register={register}
         type='password'
+        autoComplete='new-password'
         required={true}
       >
         Придумайте пароль
@@ -55,6 +67,7 @@ function RegistrationForm() {
         label='repeatPassword'
         register={register}
         type='password'
+        autoComplete='new-password'
         required={true}
       >
         Повторите пароль
