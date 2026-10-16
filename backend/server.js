@@ -4,6 +4,7 @@ const app = express()
 const path = require('path');
 const port = 3010
 const cors = require('cors');
+const userWords = require('./text/user-words.json');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
@@ -63,41 +64,24 @@ app.post('/add-words', (req, res) => {
   try {
     const words = req.body;
 
-    let isShortWords = false; // Переменная для проверки на слова с недопустимым кол-вом символов
-
     if (typeof words === 'object') { // если полученные данные - это объект
       const wordsLength = Object.keys(words).length;
       if (wordsLength === 0) { // если его длина 0 - отправляем сообщение об ошибке
-        res.json({
+        res.status(400).json({
           status: 'failed',
           message: 'Отправлено 0 слов'
         }) 
       } else {
-        for (let key in words) {
-          if (words[key].length < 2) {
-            isShortWords = true;
-            break;
-          };
-        };
 
-        if (isShortWords) { // если есть короткие слова, отправляем сообщение об этом
-          res.json({
-            status: 'failed',
-            message: 'Среди добавленных слов есть 1 или более недопустимой длины (менее 2 символов)'
-          })
-        } else {
-
-
-          res.json({  // если все проверки пройдены, отправляем кол-во полученных слов
-            status: 'success',
-            message: `Получено ${wordsLength} слов(о)`
-          });
-        }
+        res.json({  // если все проверки пройдены, отправляем кол-во полученных слов
+          status: 'success',
+          message: `Получено ${wordsLength} слов(о)`
+        });
       }
     } else {
-      res.json({
+      res.status(400).json({
         status: 'failed',
-        message: 'Отправлен не массив'
+        message: 'Отправлен не объект'
       })
     };
 
