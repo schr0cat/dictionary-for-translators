@@ -12,6 +12,8 @@ function Header() {
           <Link to='/addWords' primary>Добавить слово/слова</Link>
 
           <Link to='/dictionary' primary>Словарь</Link>
+
+          <Link to='/registration' secondary>Зарегистрироваться</Link>
         </ul>
       </nav>
     </div>
