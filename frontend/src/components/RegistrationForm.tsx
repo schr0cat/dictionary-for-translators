@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import Input from './Input';
 import type { SubmitHandler } from 'react-hook-form'
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from 'yup';
 
 interface RegistrationFormInput {
   username: string,
@@ -9,8 +11,35 @@ interface RegistrationFormInput {
   repeatPassword: string
 }
 
+const formSchema: yup.ObjectSchema<RegistrationFormInput> = yup.object().shape({ // Используем библиотеку yup для валидации полей ввода и проверки того, что пароли совпадают
+  username: yup.string()
+    .required('Имя пользователя обязательно!'),
+
+  email: yup.string()
+    .email('Введите корректный email')
+    .required('Email обязателен'),
+
+  password: yup.string()
+    .required('Пароль обязателен!')
+    .min(6, 'Длина пароля должна составлять не менее 6 символов')
+    .max(20, 'Длина пароля не может превышать 20 символов'),
+    
+  repeatPassword: yup.string()
+    .required('Повтор пароля обязателен!')
+    .min(6, 'Длина пароля должна составлять не менее 6 символов')
+    .max(20, 'Длина пароля не может превышать 20 символов')
+    .oneOf([yup.ref('password')], 'Пароли не совпадают!')
+});
+
 function RegistrationForm() {
-  const { register, handleSubmit } = useForm<RegistrationFormInput>();
+  const { 
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegistrationFormInput>({
+    mode: 'onTouched',
+    resolver: yupResolver(formSchema)
+  });
 
   const onSubmit: SubmitHandler<RegistrationFormInput> = async (data) => {
     console.log(data);
@@ -37,6 +66,10 @@ function RegistrationForm() {
       >
         Придумайте Ваше имя пользователя
       </Input>
+
+      {errors.username && 
+        <p role='alert'>{errors.username.message}</p>
+      }
     </fieldset>
     
     <fieldset>
@@ -48,6 +81,10 @@ function RegistrationForm() {
       >
         Введите адрес Вашей электронной почты
       </Input>
+
+      {errors.email && 
+        <p role='alert'>{errors.email.message}</p>
+      }
     </fieldset>
     
     <fieldset>
@@ -60,6 +97,10 @@ function RegistrationForm() {
       >
         Придумайте пароль
       </Input>
+
+      {errors.password && 
+        <p role='alert'>{errors.password.message}</p>
+      }
     </fieldset>
 
     <fieldset>
@@ -72,6 +113,11 @@ function RegistrationForm() {
       >
         Повторите пароль
       </Input>
+
+      {errors.repeatPassword && 
+        <p role='alert'>{errors.repeatPassword.message}</p>
+      }
+
     </fieldset>
 
     <button type='submit'>Зарегистрироваться</button>
