@@ -5,6 +5,7 @@ const path = require('path');
 const port = 3010
 const cors = require('cors');
 const userWords = require('./text/user-words.json');
+const bcrypt = require('bcryptjs');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
@@ -88,6 +89,31 @@ app.post('/add-words', (req, res) => {
   } catch (error) {
     res.status(500).send(error)
   };
+});
+
+const hashPasswordMiddleware = async (req, res, next) => {
+  try {
+    const pass = req.body.password;
+
+    if (!pass) {
+      return res.status(400).json({ message: 'Отсутствует пароль' })
+    };
+
+    const saltRounds = 10;
+
+    const hashedPassword = await bcrypt.hash(pass, saltRounds);
+
+    req.body.password = hashedPassword;
+
+    next()
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Ошибка хеширования пароля' })
+  }
+};
+
+app.post('/new-user', hashPasswordMiddleware, async (req, res) => {
+  res.send( {message: 'ok'} )
 });
 
 app.listen(port, () => {

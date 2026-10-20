@@ -41,8 +41,12 @@ function RegistrationForm() {
     resolver: yupResolver(formSchema)
   });
 
-  const onSubmit: SubmitHandler<RegistrationFormInput> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<RegistrationFormInput> = async (formData) => {
+    const { repeatPassword, ...data } = formData;
+
+    // TODO: решить, что делать с ошибкой TS по поводу неиспользуемой переменной repeatPassword
+
+    console.log(data)
 
     fetch('http://localhost:3010/new-user', {
       method: 'POST',
