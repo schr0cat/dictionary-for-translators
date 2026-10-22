@@ -7,6 +7,18 @@ const cors = require('cors');
 const userWords = require('./text/user-words.json');
 const bcrypt = require('bcryptjs');
 
+const pgp = require('pg-promise')()
+
+const cn = {
+    host: 'PostgreSQL-17',
+    port: 5432,
+    database: 'translator_dictionary',
+    user: 'postgres',
+    password: '',
+};
+
+const db = pgp(cn)
+
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 
@@ -112,7 +124,17 @@ const hashPasswordMiddleware = async (req, res, next) => {
   }
 };
 
+// TODO: дописать код регистрации (отправка данных об успехе или ошибке на клиент)
+// TODO: начать реализацию авторизации на клиенте и сервере
+
 app.post('/new-user', hashPasswordMiddleware, async (req, res) => {
+  console.log(req.body)
+  const { email, password, username } = req.body;
+
+  db.any('INSERT INTO users(email, password_hash, display_name) VALUES($1, $2, $3)', [email, password, username])
+    .then(result => console.log(result))
+    .catch(err => console.log(err))
+
   res.send( {message: 'ok'} )
 });
 
