@@ -6,6 +6,7 @@ import FileDownloadForm from './components/FileDownloadForm';
 import RecentlyAdded from './components/RecentlyAdded';
 import Header from './components/Header';
 import RegistrationPage from './pages/RegistrationPage';
+import AuthorizationPage from './pages/AuthorizationPage';
 
 
 function App() {
@@ -36,6 +37,10 @@ function App() {
 
       <Route path='/registration'>
         <RegistrationPage />
+      </Route>
+
+      <Route path='/authorization'>
+        <AuthorizationPage />
       </Route>
     </div>
   </>
