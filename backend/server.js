@@ -6,6 +6,7 @@ const port = 3010
 const cors = require('cors');
 const userWords = require('./text/user-words.json');
 const bcrypt = require('bcryptjs');
+const session = require('express-session');
 
 const pgp = require('pg-promise')()
 
@@ -36,6 +37,11 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUnitialized: true
+}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -103,6 +109,7 @@ app.post('/add-words', (req, res) => {
   };
 });
 
+// Генерация хэша пароля
 const hashPasswordMiddleware = async (req, res, next) => {
   try {
     const pass = req.body.password;
@@ -124,38 +131,7 @@ const hashPasswordMiddleware = async (req, res, next) => {
   }
 };
 
-// TODO: дописать код регистрации (отправка данных об успехе или ошибке на клиент)
-// TODO: начать реализацию авторизации на сервере
-
-const validatePassword = async (password, hash) => {
-  return await bcrypt.compare(password, hash);
-};
-
-
-app.post('/authorization', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    const user = await db.any('SELECT * FROM users WHERE display_name = $1', username);
-
-    if (user.length === 0) {
-      res.status(401).send({ message: 'Пользователь с таким именем не найден' });
-      return;
-    };
-
-    const isMatch = await validatePassword(password, user[0].password_hash);
-
-    if (!isMatch) {
-      res.status(401).send({ message: 'Неверный пароль' })
-    } else {
-      res.send({ message: 'Успешная авторизация' })
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: 'Ошибка сервера' })
-  };
-});
-
+// Регистрация нового пользователя
 app.post('/new-user', hashPasswordMiddleware, async (req, res) => {
   console.log(req.body)
   const { email, password, username } = req.body;
@@ -170,6 +146,89 @@ app.post('/new-user', hashPasswordMiddleware, async (req, res) => {
     })
 });
 
+// TODO: дописать код регистрации (отправка данных об успехе или ошибке на клиент)
+// TODO: начать реализацию авторизации на сервере
+
+// Сравнение пароля и его хэша
+const validatePassword = async (password, hash) => {
+  return await bcrypt.compare(password, hash);
+};
+
+// TODO: дописать код перенаправления пользователя на главную страницу с учётом того, что он авторизован
+
+// Проверка авторизации пользователя
+const isAuthenticated = (req, res, next) => {
+  if (req.session.userId) {
+    next();
+  } else {
+    return res.send({ message: 'Не авторизован' })
+  }
+};
+
+// Авторизация пользователя
+app.post('/authorization', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await db.any('SELECT * FROM users WHERE display_name = $1', username);
+
+    if (user.length === 0) {
+      res.status(401).send({ message: 'Пользователь с таким именем не найден' });
+      return;
+    };
+
+    const isMatch = await validatePassword(password, user[0].password_hash);
+
+    if (!isMatch) {
+      res.status(401).send({ message: 'Неверный пароль' });
+      return;
+    };
+
+    req.session.regenerate((err) => {
+      if (err) {
+        next(err);
+      };
+
+      req.session.userId = user[0].id;
+
+      req.session.save((err) => {
+        if (err) {
+          return next(err);
+        };
+
+        res.send({
+          message: 'Успешная авторизация',
+          redirectUrl: '/' 
+        });
+      })
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: 'Ошибка сервера' })
+  };
+});
+
+// Выход пользователя из системы
+app.get('/logout', (req, res, next) => {
+  req.session.userId = null;
+  req.session.save(() => {
+    if (err) {
+      next(err);
+    };
+
+    req.session.regenerate((err) => {
+      if (err) {
+        next(err);
+      };
+
+      res.send({
+        message: 'Успешный выход из системы',
+        redirectUrl: '/'
+      });
+    });
+  })
+});
+
 app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
+  console.log(`App listening on port http://localhost:${port}`)
 })
