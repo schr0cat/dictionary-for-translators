@@ -29,8 +29,6 @@ function AuthorizationForm() {
   });
 
   const onSubmit: SubmitHandler<AuthorizationFormInput> = async (formData) => {
-    console.log(formData);
-
     fetch('http://localhost:3010/authorization', {
       method: 'POST',
       headers: {

@@ -125,17 +125,49 @@ const hashPasswordMiddleware = async (req, res, next) => {
 };
 
 // TODO: дописать код регистрации (отправка данных об успехе или ошибке на клиент)
-// TODO: начать реализацию авторизации на клиенте и сервере
+// TODO: начать реализацию авторизации на сервере
+
+const validatePassword = async (password, hash) => {
+  return await bcrypt.compare(password, hash);
+};
+
+
+app.post('/authorization', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await db.any('SELECT * FROM users WHERE display_name = $1', username);
+
+    if (user.length === 0) {
+      res.status(401).send({ message: 'Пользователь с таким именем не найден' });
+      return;
+    };
+
+    const isMatch = await validatePassword(password, user[0].password_hash);
+
+    if (!isMatch) {
+      res.status(401).send({ message: 'Неверный пароль' })
+    } else {
+      res.send({ message: 'Успешная авторизация' })
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: 'Ошибка сервера' })
+  };
+});
 
 app.post('/new-user', hashPasswordMiddleware, async (req, res) => {
   console.log(req.body)
   const { email, password, username } = req.body;
 
   db.any('INSERT INTO users(email, password_hash, display_name) VALUES($1, $2, $3)', [email, password, username])
-    .then(result => console.log(result))
-    .catch(err => console.log(err))
-
-  res.send( {message: 'ok'} )
+    .then(_ => {
+      res.send({ message: 'Успешная регистрация' })
+    })
+    .catch(err => {
+      console.log(err)
+      res.send({ message: 'Ошибка при регистрации' })
+    })
 });
 
 app.listen(port, () => {
