@@ -43,6 +43,18 @@ app.use(session({
   saveUnitialized: true
 }));
 
+app.use((error, req, res, next) => {
+  console.error(error);
+
+  if (res.headersSent) {
+    return next(error);
+  };
+
+  res.status(500).send({
+    message: 'Ошибка сервера'
+  });
+});
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -161,7 +173,7 @@ const isAuthenticated = (req, res, next) => {
   if (req.session.userId) {
     next();
   } else {
-    return res.send({ message: 'Не авторизован' })
+    return res.status(401).send({ message: 'Не авторизован' })
   }
 };
 
@@ -206,6 +218,26 @@ app.post('/authorization', async (req, res) => {
     console.log(error);
     res.status(500).send({ message: 'Ошибка сервера' })
   };
+});
+
+app.get('/me', isAuthenticated, async (req, res, next) => {
+  try {
+    const user = await db.oneOrNone(
+      'SELECT id, display_name FROM users WHERE id = $1', req.session.userId
+    );
+
+    if (!user) {
+      return res.status(401).send({
+        message: 'Войдите в аккаунт'
+      });
+    };
+
+    res.send({ user });
+
+    // TODO: дописать функцию возврата данных авторизованному пользователю
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Выход пользователя из системы
