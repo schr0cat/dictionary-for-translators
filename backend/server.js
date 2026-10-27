@@ -171,6 +171,8 @@ const validatePassword = async (password, hash) => {
 
 // Проверка авторизации пользователя
 const isAuthenticated = (req, res, next) => {
+  console.log(req.session.userId)
+
   if (req.session.userId) {
     next();
   } else {
@@ -209,9 +211,11 @@ app.post('/authorization', async (req, res, next) => {
           return next(err);
         };
 
+        // console.log(req.session.userId);
+
         res.send({
           message: 'Успешная авторизация',
-          redirectUrl: '/' 
+          // redirectUrl: '/' 
         });
       })
     });
