@@ -26,7 +26,8 @@ app.use(express.json());
 app.use(cors({
   origin: `http://localhost:5173`,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ["Content-Type, Authorization"]
+  allowedHeaders: ["Content-Type, Authorization"],
+  credentials: true
 }));
 
 app.use(
@@ -40,7 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUnitialized: true
+  saveUninitialized: false
 }));
 
 app.use((error, req, res, next) => {
@@ -178,7 +179,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Авторизация пользователя
-app.post('/authorization', async (req, res) => {
+app.post('/authorization', async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -198,7 +199,7 @@ app.post('/authorization', async (req, res) => {
 
     req.session.regenerate((err) => {
       if (err) {
-        next(err);
+        return next(err);
       };
 
       req.session.userId = user[0].id;
@@ -241,9 +242,9 @@ app.get('/me', isAuthenticated, async (req, res, next) => {
 });
 
 // Выход пользователя из системы
-app.get('/logout', (req, res, next) => {
+app.post('/logout', (req, res, next) => {
   req.session.userId = null;
-  req.session.save(() => {
+  req.session.save((err) => {
     if (err) {
       next(err);
     };
