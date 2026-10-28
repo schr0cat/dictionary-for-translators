@@ -16,6 +16,8 @@ function App() {
         <IndexPage />
       </Route>
 
+      {/* TODO: добавить кнопку логаута и настроить её показ в шапке */}
+
       <Route path='/addWords'>
         <AddWordsPage />
       </Route>

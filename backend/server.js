@@ -258,9 +258,8 @@ app.post('/logout', (req, res, next) => {
         next(err);
       };
 
-      res.send({
+      res.status(204).send({
         message: 'Успешный выход из системы',
-        redirectUrl: '/'
       });
     });
   })
