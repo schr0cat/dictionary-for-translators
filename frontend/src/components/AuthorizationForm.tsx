@@ -51,7 +51,7 @@ function AuthorizationForm() {
     };
 
     await refreshUser();
-    // navigate('/');
+    navigate('/');
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>

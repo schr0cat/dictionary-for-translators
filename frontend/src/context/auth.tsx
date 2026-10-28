@@ -5,7 +5,7 @@ type StatusValues = "loading" | "ready" | "error";
 interface AuthContextType {
   user: { id: number, display_name: string } | null,
   status: StatusValues,
-  refreshUser: () => void
+  refreshUser: () => Promise<void>
 };
 
 interface ProviderProps {
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 function AuthProvider({ children }: ProviderProps) {
   const [user, setUser] = useState(null);
-  const [status, setStatus] = useState('loading');
+  const [status, setStatus] = useState<StatusValues>('loading');
 
   const refreshUser = async () => {
     try {
@@ -44,13 +44,13 @@ function AuthProvider({ children }: ProviderProps) {
   // TODO: изучить подробнее эту проблему с каскадными ререндерами
 
   useEffect(() => {
-    refreshUser()
+    // состояние обновляется после асинхронного запроса /me. Поэтому каскадного рендера не будет 
+    // eslint-disable-next-line
+    refreshUser();
   }, []);
 
   console.log(user);
   console.log(status)
-
-  // TODO: дописать код создания сессии. Пока что даже при успешной авторизации не обновляются переменные user и status
 
   return (
     <AuthContext.Provider value={{ user, status, refreshUser }}>
