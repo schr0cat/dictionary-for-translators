@@ -5,7 +5,8 @@ type StatusValues = "loading" | "ready" | "error";
 interface AuthContextType {
   user: { id: number, display_name: string } | null,
   status: StatusValues,
-  refreshUser: () => Promise<void>
+  refreshUser: () => Promise<void>,
+  logoutUser: () => void
 };
 
 interface ProviderProps {
@@ -41,6 +42,11 @@ function AuthProvider({ children }: ProviderProps) {
     }
   }
 
+  const logoutUser = () => {
+    setUser(null);
+    setStatus('ready');
+  };
+
   // TODO: изучить подробнее эту проблему с каскадными ререндерами
 
   useEffect(() => {
@@ -53,7 +59,7 @@ function AuthProvider({ children }: ProviderProps) {
   console.log(status)
 
   return (
-    <AuthContext.Provider value={{ user, status, refreshUser }}>
+    <AuthContext.Provider value={{ user, status, refreshUser, logoutUser }}>
       {children}
     </AuthContext.Provider>
   );
