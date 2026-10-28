@@ -1,10 +1,21 @@
 import AddWordsForm from '../components/AddWordsForm';
+import useAuth from '../hooks/use-auth';
 
 function AddWordsPage() {
-  return <div>
-    Add words
+  const { status, user } = useAuth();
 
-    <AddWordsForm></AddWordsForm>
+  return <div>
+    {(status === 'ready' && user) ? (
+      <>
+        Add words
+
+        <AddWordsForm></AddWordsForm>
+      </>
+    ) : (
+      <>
+        Содержимое для неавторизованного пользователя
+      </> 
+    )}
   </div>
 };
 
