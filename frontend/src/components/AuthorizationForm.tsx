@@ -4,6 +4,8 @@ import Button from './Button';
 import type { SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import useAuth from '../hooks/use-auth';
+import useNavigation from '../hooks/use-navigation';
 
 interface AuthorizationFormInput {
   username: string,
@@ -28,17 +30,28 @@ function AuthorizationForm() {
     resolver: yupResolver(formSchema)
   });
 
+  const { refreshUser } = useAuth();
+  const { navigate } = useNavigation();
+
   const onSubmit: SubmitHandler<AuthorizationFormInput> = async (formData) => {
-    fetch('http://localhost:3010/authorization', {
+    const res = await fetch('http://localhost:3010/authorization', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(formData)
     })
-      .then(res => res.json())
-      .then(res => console.log(res))
-      .catch(err => console.error(err))
+
+    // Узнать, что такое credentials и что даёт значение include
+    // TODO: сделать отображение главной страницы разным для авторизованных и неавторизованных пользователей
+
+    if (!res.ok) {
+      return;
+    };
+
+    await refreshUser();
+    navigate('/');
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>
