@@ -5,11 +5,9 @@ const path = require('path');
 const port = 3010
 const cors = require('cors');
 const userWords = require('./text/user-words.json');
-const bcrypt = require('bcryptjs');
-const session = require('express-session');
-const db = require('./config/db');
-const isAuthenticated = require('./middleware/isAuthenticated');
 const errorHandler = require('./middleware/errorHandler');
+const sessionMiddleware = require('./config/session');
+const authRoutes = require('./routes/auth.routes');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
@@ -29,11 +27,9 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(sessionMiddleware);
+
+app.use(authRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -99,138 +95,6 @@ app.post('/add-words', (req, res) => {
   } catch (error) {
     res.status(500).send(error)
   };
-});
-
-// Генерация хэша пароля
-const hashPasswordMiddleware = async (req, res, next) => {
-  try {
-    const pass = req.body.password;
-
-    if (!pass) {
-      return res.status(400).json({ message: 'Отсутствует пароль' })
-    };
-
-    const saltRounds = 10;
-
-    const hashedPassword = await bcrypt.hash(pass, saltRounds);
-
-    req.body.password = hashedPassword;
-
-    next()
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: 'Ошибка хеширования пароля' })
-  }
-};
-
-// Регистрация нового пользователя
-app.post('/new-user', hashPasswordMiddleware, async (req, res) => {
-  console.log(req.body)
-  const { email, password, username } = req.body;
-
-  db.any('INSERT INTO users(email, password_hash, display_name) VALUES($1, $2, $3)', [email, password, username])
-    .then(_ => {
-      res.send({ message: 'Успешная регистрация' })
-    })
-    .catch(err => {
-      console.log(err)
-      res.send({ message: 'Ошибка при регистрации' })
-    })
-});
-
-// TODO: дописать код регистрации (отправка данных об успехе или ошибке на клиент)
-// TODO: начать реализацию авторизации на сервере
-
-// Сравнение пароля и его хэша
-const validatePassword = async (password, hash) => {
-  return await bcrypt.compare(password, hash);
-};
-
-// TODO: дописать код перенаправления пользователя на главную страницу с учётом того, что он авторизован
-
-// Авторизация пользователя
-app.post('/authorization', async (req, res, next) => {
-  try {
-    const { username, password } = req.body;
-
-    const user = await db.any('SELECT * FROM users WHERE display_name = $1', username);
-
-    if (user.length === 0) {
-      res.status(401).send({ message: 'Пользователь с таким именем не найден' });
-      return;
-    };
-
-    const isMatch = await validatePassword(password, user[0].password_hash);
-
-    if (!isMatch) {
-      res.status(401).send({ message: 'Неверный пароль' });
-      return;
-    };
-
-    req.session.regenerate((err) => {
-      if (err) {
-        return next(err);
-      };
-
-      req.session.userId = user[0].id;
-
-      req.session.save((err) => {
-        if (err) {
-          return next(err);
-        };
-
-        // console.log(req.session.userId);
-
-        res.send({
-          message: 'Успешная авторизация',
-          // redirectUrl: '/' 
-        });
-      })
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: 'Ошибка сервера' })
-  };
-});
-
-app.get('/me', isAuthenticated, async (req, res, next) => {
-  try {
-    const user = await db.oneOrNone(
-      'SELECT id, display_name FROM users WHERE id = $1', req.session.userId
-    );
-
-    if (!user) {
-      return res.status(401).send({
-        message: 'Войдите в аккаунт'
-      });
-    };
-
-    res.send({ user });
-
-    // TODO: дописать функцию возврата данных авторизованному пользователю
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Выход пользователя из системы
-app.post('/logout', (req, res, next) => {
-  req.session.userId = null;
-  req.session.save((err) => {
-    if (err) {
-      next(err);
-    };
-
-    req.session.regenerate((err) => {
-      if (err) {
-        next(err);
-      };
-
-      res.status(204).send({
-        message: 'Успешный выход из системы',
-      });
-    });
-  })
 });
 
 app.use(errorHandler);
