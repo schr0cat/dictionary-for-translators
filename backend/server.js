@@ -7,18 +7,9 @@ const cors = require('cors');
 const userWords = require('./text/user-words.json');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
-
-const pgp = require('pg-promise')()
-
-const cn = {
-    host: 'PostgreSQL-17',
-    port: 5432,
-    database: 'translator_dictionary',
-    user: 'postgres',
-    password: '',
-};
-
-const db = pgp(cn)
+const db = require('./config/db');
+const isAuthenticated = require('./middleware/isAuthenticated');
+const errorHandler = require('./middleware/errorHandler');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
@@ -43,18 +34,6 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-
-app.use((error, req, res, next) => {
-  console.error(error);
-
-  if (res.headersSent) {
-    return next(error);
-  };
-
-  res.status(500).send({
-    message: 'Ошибка сервера'
-  });
-});
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -169,17 +148,6 @@ const validatePassword = async (password, hash) => {
 
 // TODO: дописать код перенаправления пользователя на главную страницу с учётом того, что он авторизован
 
-// Проверка авторизации пользователя
-const isAuthenticated = (req, res, next) => {
-  console.log(req.session.userId)
-
-  if (req.session.userId) {
-    next();
-  } else {
-    return res.status(401).send({ message: 'Не авторизован' })
-  }
-};
-
 // Авторизация пользователя
 app.post('/authorization', async (req, res, next) => {
   try {
@@ -264,6 +232,8 @@ app.post('/logout', (req, res, next) => {
     });
   })
 });
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`)
