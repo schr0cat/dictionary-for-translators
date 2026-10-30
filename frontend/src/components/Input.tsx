@@ -7,7 +7,7 @@ type InputProps<T extends FieldValues> = {
   children: string,
   label: FieldPath<T>,
   register: UseFormRegister<T>,
-  required: boolean,
+  required?: boolean,
 } & Omit<ComponentPropsWithoutRef<'input'>, 'name' | 'onChange' | 'onBlur'>
 
 

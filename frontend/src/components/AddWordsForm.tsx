@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form'
+import type { SelectOption } from './Select';
+import Select from './Select';
 
 interface AddWordsFormInput {
   word: string,
@@ -8,10 +10,27 @@ interface AddWordsFormInput {
   [key: string]: string
 };
 
+const originLangOptions: SelectOption[] = [
+  {
+    value: 'ru',
+    label: 'Russian'
+  },
+  
+  {
+    value: 'en',
+    label: 'English'
+  },
+
+  {
+    value: 'fi',
+    label: 'Finland'
+  }
+];
 
 function AddWordsForm() {
   const [wordIdx, setWordIdx] = useState(1); // Хранит в себе индекс текущего слова, если пользователь захочет добавить более 1 нового слова внутри формы
   const [dynamicRenderedInputs, setdynamicRenderedInputs] = useState<React.ReactElement[] | null>(null);
+
   
   const { register, handleSubmit } = useForm<AddWordsFormInput>();
   const onSubmit: SubmitHandler<AddWordsFormInput> = (formData) => {
@@ -56,7 +75,15 @@ function AddWordsForm() {
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>
-    <div>
+    <fieldset>
+      <label>Выберите исходный язык</label>
+
+      <Select
+        options={originLangOptions}
+      />
+    </fieldset>
+
+    <fieldset>
       <input 
         {...register('word')}
         placeholder='Введите слово' 
@@ -68,7 +95,7 @@ function AddWordsForm() {
         placeholder='Введите перевод слова' 
         required 
       />
-    </div>
+    </fieldset>
     
     {dynamicRenderedInputs}
     
