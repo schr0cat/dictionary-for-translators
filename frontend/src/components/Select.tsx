@@ -1,38 +1,79 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
+import type { FieldPath, FieldValues, UseFormRegister } from "react-hook-form";
 
 export type SelectOption = {
   value: string,
   label: string
 };
 
-interface SelectProps {
-  options: SelectOption[]
+interface SelectProps<T extends FieldValues> {
+  options: SelectOption[],
+  register: UseFormRegister<T>,
+  label: FieldPath<T>,
+  required?: boolean,
 };
 
-// TODO: завершить настройку этого компонента (написать стили) и интегрировать его в форму AddWordsForm
-
-function Select({ options }: SelectProps) {
+function Select<T extends FieldValues>({
+  options,
+  register,
+  label,
+  required,
+  ...rest
+ }: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeOption, setActiveOption] = useState('Выберите...');
+  
+  const divEl = useRef<HTMLDivElement | null>(null);
 
-  const handleOptionClick = (option: string) => {
-    setActiveOption(option);
-    setIsOpen(!isOpen);
-  };
+  // Если селект открыт и пользователь нажимает в любом месте сайта вне области селекта, этот селект закроется
+  useEffect(() => {
+    if (!divEl.current) {
+      return;
+    };
 
-  const handleActiveOptionClick = () => {
-    setIsOpen(!isOpen);
-  };
+    const handler = (event: MouseEvent) => {
+      if (
+        divEl.current &&
+        event.target instanceof Node &&
+        !divEl.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      };
+    };
+
+    document.addEventListener('click', handler, true);
+
+    return () => document.removeEventListener('click', handler, true);
+  }, []);
 
   const renderedOptions = options.map((option) => {
-    return <div key={option.value} onClick={() => handleOptionClick(option.label)}>{option.label}</div>
+    return <option 
+      key={option.value}
+      className='p-2 border border-x-2 border-gray-100 w-fit cursor-pointer'
+      value={option.value}
+    >
+      {option.label}
+    </option>
   });
 
-  return <div>
-    <div onClick={handleActiveOptionClick}>{activeOption}</div>
-    
-    {isOpen && renderedOptions}
+  const classes: string = classNames(twMerge(
+    'px-2 py-3 border-2 border-gray-100 rounded-md w-fit cursor-pointer'
+  ));
+
+  return <div ref={divEl}>
+      <select
+        {...rest}
+        className={classes} 
+        onClick={() => setIsOpen(!isOpen)} 
+        {...register(label, {required})}
+      >
+        <option value=''>Выбрать...</option>
+
+        {renderedOptions}
+      </select>
   </div>
+ 
 };
 
 export default Select;
