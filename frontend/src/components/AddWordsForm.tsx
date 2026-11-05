@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form'
+import type { SelectOption } from './Select';
+import Select from './Select';
 
 interface AddWordsFormInput {
   word: string,
@@ -8,27 +10,50 @@ interface AddWordsFormInput {
   [key: string]: string
 };
 
+const originLangOptions: SelectOption[] = [
+  {
+    value: 'ru',
+    label: 'Russian'
+  },
+  
+  {
+    value: 'en',
+    label: 'English'
+  },
+
+  {
+    value: 'fi',
+    label: 'Finland'
+  }
+];
 
 function AddWordsForm() {
   const [wordIdx, setWordIdx] = useState(1); // Хранит в себе индекс текущего слова, если пользователь захочет добавить более 1 нового слова внутри формы
   const [dynamicRenderedInputs, setdynamicRenderedInputs] = useState<React.ReactElement[] | null>(null);
+
   
-  const { register, handleSubmit } = useForm<AddWordsFormInput>();
+  const { 
+    register, 
+    handleSubmit,
+    formState: { errors } 
+  } = useForm<AddWordsFormInput>();
   const onSubmit: SubmitHandler<AddWordsFormInput> = (formData) => {
     console.log(formData);
 
-    const keys = Object.keys(formData);
-    const wordsObj: { [key: string]: string } = {};
+    // TODO: переделать логику отправки полученных данных на сервер. Продумать оптимальный формат передачи
 
-    for (let i = 0; i < keys.length; i++) {
-      const currentKey = keys[i];
+    // const keys = Object.keys(formData);
+    // const wordsObj: { [key: string]: string } = {};
 
-      if (i % 2 === 0) { // превращаем данные из объекта formData в объект вида: 'слово: перевод, слово: перевод, ...'
-        wordsObj[formData[currentKey]] = formData[keys[i+1]]
-      };
-    };
+    // for (let i = 0; i < keys.length; i++) {
+    //   const currentKey = keys[i];
 
-    console.log(wordsObj);
+    //   if (i % 2 === 0) { // превращаем данные из объекта formData в объект вида: 'слово: перевод, слово: перевод, ...'
+    //     wordsObj[formData[currentKey]] = formData[keys[i+1]]
+    //   };
+    // };
+
+    // console.log(wordsObj);
 
     fetch('http://localhost:3010/add-words', {
       method: 'POST',
@@ -56,7 +81,37 @@ function AddWordsForm() {
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>
-    <div>
+    <fieldset>
+      <label>Выберите исходный язык</label>
+
+      <Select
+        label='originLang'
+        register={register}
+        options={originLangOptions}
+        required
+        aria-invalid={errors.originLang ? "true" : "false"}
+      />
+
+      {errors.originLang?.type === 'required' && (
+        <p role='alert'>Выбор исходного языка обязателен!</p>
+      )}
+
+      <label>Выберите язык перевода</label>
+
+      <Select
+        label='translateLang'
+        register={register}
+        options={originLangOptions}
+        required
+        aria-invalid={errors.translateLang ? "true" : "false"}
+      />
+
+      {errors.translateLang?.type === 'required' && (
+        <p role='alert'>Выбор языка перевода обязателен!</p>
+      )}
+    </fieldset>
+
+    <fieldset>
       <input 
         {...register('word')}
         placeholder='Введите слово' 
@@ -68,7 +123,7 @@ function AddWordsForm() {
         placeholder='Введите перевод слова' 
         required 
       />
-    </div>
+    </fieldset>
     
     {dynamicRenderedInputs}
     
