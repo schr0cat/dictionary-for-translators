@@ -18,6 +18,7 @@ function IndexPage() {
             </div>
 
             <div className='flex gap-x-8'>
+              {/* TODO: начать написание вывода недавно добавленных слов для авторизованного пользователя */}
               <RecentlyAdded />
               <FileDownloadForm />
             </div>

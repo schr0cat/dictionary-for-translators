@@ -1,8 +1,6 @@
 // Проверка авторизации пользователя
 
 const isAuthenticated = (req, res, next) => {
-  console.log(req.session.userId)
-
   if (req.session.userId) {
     next();
   } else {
