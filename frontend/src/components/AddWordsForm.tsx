@@ -40,24 +40,10 @@ function AddWordsForm() {
   const onSubmit: SubmitHandler<AddWordsFormInput> = (formData) => {
     console.log(formData);
 
-    // TODO: переделать логику отправки полученных данных на сервер. Продумать оптимальный формат передачи
-
-    // const keys = Object.keys(formData);
-    // const wordsObj: { [key: string]: string } = {};
-
-    // for (let i = 0; i < keys.length; i++) {
-    //   const currentKey = keys[i];
-
-    //   if (i % 2 === 0) { // превращаем данные из объекта formData в объект вида: 'слово: перевод, слово: перевод, ...'
-    //     wordsObj[formData[currentKey]] = formData[keys[i+1]]
-    //   };
-    // };
-
-    // console.log(wordsObj);
-
     fetch('http://localhost:3010/add-words', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(formData)
     })
       .then(result => result.json())
