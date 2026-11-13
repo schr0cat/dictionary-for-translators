@@ -35,6 +35,8 @@ function RecentlyAdded() {
     getWords();
   }, []);
 
+  // TODO: начать перенос проекта на redux
+
   if (Array.isArray(words)) {
     renderedItems = words.map((word) => {
       return <li key={word.id}>
