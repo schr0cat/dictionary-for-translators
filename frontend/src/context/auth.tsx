@@ -1,10 +1,9 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect, useCallback } from 'react';
+import { setUser, setStatus } from '../store'
+import { useDispatch, useSelector } from 'react-redux';
+import type { AuthSliceType } from '../store/slices/authSlice';
 
-type StatusValues = "loading" | "ready" | "error";
-
-interface AuthContextType {
-  user: { id: number, display_name: string } | null,
-  status: StatusValues,
+interface AuthContextType extends AuthSliceType {
   refreshUser: () => Promise<void>,
   logoutUser: () => void
 };
@@ -16,8 +15,10 @@ interface ProviderProps {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 function AuthProvider({ children }: ProviderProps) {
-  const [user, setUser] = useState(null);
-  const [status, setStatus] = useState<StatusValues>('loading');
+  const dispatch = useDispatch();
+  const { user, status }: AuthSliceType = useSelector(state => state.auth);
+  // const [user, setUser] = useState(null);
+  // const [status, setStatus] = useState<StatusValues>('loading');
 
   const refreshUser = async () => {
     try {
@@ -25,17 +26,17 @@ function AuthProvider({ children }: ProviderProps) {
         credentials: 'include'
       });
 
-      const resData = await res.json();
+      const resData: AuthSliceType['user'] = await res.json();
       console.log(resData);
       
       if (res.status === 200) {
-        setUser(resData);
-        setStatus('ready');
+        dispatch(setUser(resData));
+        dispatch(setStatus('ready'));
       } else if (res.status == 401) {
-        setUser(null);
-        setStatus('ready');
+        dispatch(setUser(null));
+        dispatch(setStatus('ready'));
       } else if (res.status === 500) {
-        setStatus('error');
+        dispatch(setStatus('error'));
       }
     } catch (err) {
       console.log(err);
@@ -43,15 +44,14 @@ function AuthProvider({ children }: ProviderProps) {
   }
 
   const logoutUser = () => {
-    setUser(null);
-    setStatus('ready');
+    dispatch(setUser(null));
+    dispatch(setStatus('ready'));
   };
 
-  // TODO: изучить подробнее эту проблему с каскадными ререндерами
+  // TODO: разобраться с useCallback
+  // TODO: начать перенос проекта на React Router Dom
 
   useEffect(() => {
-    // состояние обновляется после асинхронного запроса /me. Поэтому каскадного рендера не будет 
-    // eslint-disable-next-line
     refreshUser();
   }, []);
 
