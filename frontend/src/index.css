@@ -31,3 +31,12 @@ body {
   margin: 0 auto;
   padding: 0 15px;
 }
+
+a.active {
+  background-color: var(--color-text-blue);
+}
+
+a.reg-link.active {
+  background-color: transparent;
+  color: var(--color-text-blue);
+}

@@ -1,4 +1,3 @@
-// import Route from './components/Route';
 import { Routes, Route } from 'react-router';
 import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
@@ -24,8 +23,6 @@ function App() {
 
         <Route path='/authorization' element={<AuthorizationPage />}></Route>
       </Routes>
-
-      {/* TODO: добавить кнопку логаута и настроить её показ в шапке */}
     </div>
   </>
 }

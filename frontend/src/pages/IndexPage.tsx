@@ -1,6 +1,5 @@
 import RecentlyAdded from '../components/RecentlyAdded';
 import FileDownloadForm from '../components/FileDownloadForm';
-// import Link from '../components/Link';
 import { Link } from 'react-router';
 import useAuth from '../hooks/use-auth';
 
@@ -25,6 +24,8 @@ function IndexPage() {
             </div>
           </> 
       }
+
+      {/* TODO: пофиксить баг с тем, что пользователь может нажимая на кнопки перехода к прошлой и следующей страницы перейти на страницы авторизации и регистрации даже при том, что он уже авторизован */}
 
       {
         (status === 'ready' && !user) &&

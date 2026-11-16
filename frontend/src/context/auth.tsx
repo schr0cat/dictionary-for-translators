@@ -49,7 +49,6 @@ function AuthProvider({ children }: ProviderProps) {
   };
 
   // TODO: разобраться с useCallback
-  // TODO: начать перенос проекта на React Router Dom
 
   useEffect(() => {
     refreshUser();
