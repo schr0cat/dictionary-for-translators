@@ -51,6 +51,8 @@ function AddWordsForm() {
       .catch(err => console.error(err))
   };
 
+  // TODO: написать код для вывода уведомления пользователю при успешном добавлении слова (слов)
+
   const handleClick = () => {
     const inputs: React.ReactElement[] = Array.isArray(dynamicRenderedInputs) ? [...dynamicRenderedInputs] : []; // Если в переменной dynamicRenderedInputs хранится массив, то переменная inputs будет массивом со значениями старого массива. Если dynamicRenderedInputs это null, тогда inputs будет пустым массивом.
 

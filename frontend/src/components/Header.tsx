@@ -1,11 +1,9 @@
-import Link from './Link';
+import { NavLink, Link } from 'react-router';
 import Button from './Button';
 import useAuth from '../hooks/use-auth';
-import useNavigation from '../hooks/use-navigation';
 
 function Header() {
   const { status, user, logoutUser } = useAuth();
-  const { navigate } = useNavigation();
 
   const logout = async () => {
     try {
@@ -16,7 +14,6 @@ function Header() {
 
       if (res.status === 204) {
         logoutUser();
-        navigate('/');
         return;
       };
 
@@ -33,17 +30,29 @@ function Header() {
       </Link>
 
       <nav className=''>
-        <ul className='flex gap-x-6'>
+        <ul className='flex gap-x-6 items-center'>
           {(status === 'ready' && user) ? (
             <>
-              <Link to='/addWords' primary>Добавить слово/слова</Link>
-              <Link to='/dictionary' primary>Словарь</Link>
+              <NavLink
+                to='/addWords'
+                className='bg-(--color-primary) text-lg text-(--color-white) p-[8px_28px] rounded-lg'
+              >
+                Добавить слово/слова
+              </NavLink>
+
+              <NavLink
+                to='/dictionary'
+                className='bg-(--color-primary) text-lg text-(--color-white) p-[8px_70px] rounded-lg'
+              >
+                Словарь
+              </NavLink>
+              
               <Button outline onClick={logout}>Выйти</Button>
             </>
           ) : (
             <>
-              <Link to='/registration' secondary>Регистрация</Link>
-              <Link to='/authorization' secondary>Авторизация</Link>
+              <NavLink to='/registration' className='reg-link'>Регистрация</NavLink>
+              <NavLink to='/authorization' className='reg-link'>Авторизация</NavLink>
             </>
           )}
         </ul>

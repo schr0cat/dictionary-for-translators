@@ -1,4 +1,4 @@
-import Link from './Link';
+import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
 
 interface RecentlyAddedWord {
@@ -34,8 +34,6 @@ function RecentlyAdded() {
     // eslint-disable-next-line
     getWords();
   }, []);
-
-  // TODO: начать перенос проекта на redux
 
   if (Array.isArray(words)) {
     renderedItems = words.map((word) => {
