@@ -5,7 +5,8 @@ import type { SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import useAuth from '../hooks/use-auth';
-import useNavigation from '../hooks/use-navigation';
+// import useNavigation from '../hooks/use-navigation';
+import { useNavigate } from 'react-router';
 
 interface AuthorizationFormInput {
   username: string,
@@ -31,7 +32,7 @@ function AuthorizationForm() {
   });
 
   const { refreshUser } = useAuth();
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<AuthorizationFormInput> = async (formData) => {
     const res = await fetch('http://localhost:3010/authorization', {

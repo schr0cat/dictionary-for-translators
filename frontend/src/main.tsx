@@ -6,15 +6,18 @@ import { NavigationProvider } from './context/navigation'
 import { AuthProvider } from './context/auth'
 import { store } from './store'
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <NavigationProvider>
+      {/* <NavigationProvider> */}
+      <BrowserRouter>
         <AuthProvider>
           <App />
         </AuthProvider>
-      </NavigationProvider>
+      </BrowserRouter>
+      {/* </NavigationProvider> */}
     </Provider>
   </StrictMode>,
 )

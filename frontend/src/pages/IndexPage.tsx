@@ -1,6 +1,7 @@
 import RecentlyAdded from '../components/RecentlyAdded';
 import FileDownloadForm from '../components/FileDownloadForm';
-import Link from '../components/Link';
+// import Link from '../components/Link';
+import { Link } from 'react-router';
 import useAuth from '../hooks/use-auth';
 
 function IndexPage() {

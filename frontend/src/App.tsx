@@ -1,4 +1,5 @@
-import Route from './components/Route';
+// import Route from './components/Route';
+import { Routes, Route } from 'react-router';
 import AddWordsPage from './pages/AddWordsPage';
 import DictionaryPage from './pages/DictionaryPage';
 import Header from './components/Header';
@@ -12,27 +13,19 @@ function App() {
     <Header></Header>
 
     <div className='container'>
-      <Route path='/'>
-        <IndexPage />
-      </Route>
+      <Routes>
+        <Route index path='/' element={<IndexPage />}></Route>
+
+        <Route path='/addWords' element={<AddWordsPage />}></Route>
+
+        <Route path='/dictionary' element={<DictionaryPage />}></Route>
+
+        <Route path='/registration' element={<RegistrationPage />}></Route>
+
+        <Route path='/authorization' element={<AuthorizationPage />}></Route>
+      </Routes>
 
       {/* TODO: добавить кнопку логаута и настроить её показ в шапке */}
-
-      <Route path='/addWords'>
-        <AddWordsPage />
-      </Route>
-
-      <Route path='/dictionary'>
-        <DictionaryPage />
-      </Route>
-
-      <Route path='/registration'>
-        <RegistrationPage />
-      </Route>
-
-      <Route path='/authorization'>
-        <AuthorizationPage />
-      </Route>
     </div>
   </>
 }

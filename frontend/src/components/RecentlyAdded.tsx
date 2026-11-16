@@ -1,4 +1,5 @@
-import Link from './Link';
+// import Link from './Link';
+import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
 
 interface RecentlyAddedWord {

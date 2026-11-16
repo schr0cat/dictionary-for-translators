@@ -1,18 +1,18 @@
-import useNavigation from '../hooks/use-navigation.ts';
+// import useNavigation from '../hooks/use-navigation.ts';
 
-interface RouteProps {
-  path: string,
-  children: React.ReactNode
-};
+// interface RouteProps {
+//   path: string,
+//   children: React.ReactNode
+// };
 
-function Route({ path, children }: RouteProps) {
-  const { currentPath } = useNavigation();
+// function Route({ path, children }: RouteProps) {
+//   // const { currentPath } = useNavigation();
 
-  if (path === currentPath) {
-    return children;
-  }
+//   if (path === currentPath) {
+//     return children;
+//   }
 
-  return null;
-}
+//   return null;
+// }
 
-export default Route;
+// export default Route;

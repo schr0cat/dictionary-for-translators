@@ -1,11 +1,12 @@
-import Link from './Link';
+// import Link from './Link';
+import { NavLink, Link } from 'react-router';
 import Button from './Button';
 import useAuth from '../hooks/use-auth';
-import useNavigation from '../hooks/use-navigation';
+// import useNavigation from '../hooks/use-navigation';
 
 function Header() {
   const { status, user, logoutUser } = useAuth();
-  const { navigate } = useNavigation();
+  // const { navigate } = useNavigation();
 
   const logout = async () => {
     try {
@@ -16,7 +17,7 @@ function Header() {
 
       if (res.status === 204) {
         logoutUser();
-        navigate('/');
+        // navigate('/');
         return;
       };
 
@@ -36,14 +37,14 @@ function Header() {
         <ul className='flex gap-x-6'>
           {(status === 'ready' && user) ? (
             <>
-              <Link to='/addWords' primary>Добавить слово/слова</Link>
-              <Link to='/dictionary' primary>Словарь</Link>
+              <NavLink to='/addWords'>Добавить слово/слова</NavLink>
+              <Link to='/dictionary'>Словарь</Link>
               <Button outline onClick={logout}>Выйти</Button>
             </>
           ) : (
             <>
-              <Link to='/registration' secondary>Регистрация</Link>
-              <Link to='/authorization' secondary>Авторизация</Link>
+              <NavLink to='/registration'>Регистрация</NavLink>
+              <NavLink to='/authorization'>Авторизация</NavLink>
             </>
           )}
         </ul>
