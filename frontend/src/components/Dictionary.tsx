@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import Select from './Select';
+import { languagePares } from '../api/languagePares';
 
 function Dictionary() {
   const getWords = async () => {
@@ -19,7 +21,9 @@ function Dictionary() {
   }, []);
 
   return <div>
+    <h2>Выберите языковую пару</h2>
 
+    <Select options={languagePares}></Select>
   </div>
 };
 
