@@ -18,7 +18,7 @@ function RecentlyAdded() {
 
   const getWords = async () => {
     try {
-      const res = await fetch('http://localhost:3010/recently-added', {
+      const res = await fetch('http://localhost:3010/get-words?recently=true', {
         credentials: 'include'
       });
 

@@ -62,12 +62,17 @@ async function saveWords(words, userId) {
   
 };
 
-router.get('/recently-added', isAuthenticated, async (req, res, next) => {
-  console.log(1);
+router.get('/get-words', isAuthenticated, async (req, res, next) => {
   const userId = req.session.userId;
+  const isRecently = req.query.recently;
+  let words;
 
   try {
-    const words = await db.any(`SELECT * FROM dictionary_entries WHERE user_id = ${userId} ORDER BY created_at DESC LIMIT 5`);
+    if (isRecently === 'true') {
+      words = await db.any(`SELECT * FROM dictionary_entries WHERE user_id = ${userId} ORDER BY created_at DESC LIMIT 5`);
+    } else {
+      words = await db.any(`SELECT * FROM dictionary_entries WHERE user_id = ${userId} ORDER BY created_at DESC`);
+    };
 
     res.json(words);
   } catch (err) {
