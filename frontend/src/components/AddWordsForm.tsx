@@ -1,31 +1,14 @@
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form'
-import type { SelectOption } from './Select';
 import Select from './Select';
+import { languages } from '../api/languages';
 
 interface AddWordsFormInput {
   word: string,
   translate: string,
   [key: string]: string
 };
-
-const originLangOptions: SelectOption[] = [
-  {
-    value: 'ru',
-    label: 'Russian'
-  },
-  
-  {
-    value: 'en',
-    label: 'English'
-  },
-
-  {
-    value: 'fi',
-    label: 'Finland'
-  }
-];
 
 function AddWordsForm() {
   const [wordIdx, setWordIdx] = useState(1); // Хранит в себе индекс текущего слова, если пользователь захочет добавить более 1 нового слова внутри формы
@@ -75,7 +58,7 @@ function AddWordsForm() {
       <Select
         label='originLang'
         register={register}
-        options={originLangOptions}
+        options={languages}
         required
         aria-invalid={errors.originLang ? "true" : "false"}
       />
@@ -89,7 +72,7 @@ function AddWordsForm() {
       <Select
         label='translateLang'
         register={register}
-        options={originLangOptions}
+        options={languages}
         required
         aria-invalid={errors.translateLang ? "true" : "false"}
       />
