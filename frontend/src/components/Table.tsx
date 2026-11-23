@@ -1,4 +1,5 @@
 import type { TableProps } from '../api/TableProps';
+import { Fragment } from 'react';
 
 function Table<T extends object>({ 
   data, 
@@ -6,6 +7,13 @@ function Table<T extends object>({
   keyFn
 }: TableProps<T>) {
   const renderedHeaders = config.map((column) => {
+    // TODO: сделать так, чтобы в интерфейсе config было опциональное свойство header
+    if (column.header) {
+      return <Fragment key={column.label}>
+        {column.header()}
+      </Fragment>
+    }
+
     return <th key={column.label}>{column.label}</th>
   });
 

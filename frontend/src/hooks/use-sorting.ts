@@ -32,6 +32,7 @@ export function useSorting<T>(
   let sortedData = data;
 
   if (sortOrder && sortBy) {
+    // TODO: выяснить, почему ts не понимает, что в объектах массива config есть опциональное свойство sortValue
     const { sortValue } = config.find(column => column.label === sortBy);
 
     sortedData = [...data].sort((a, b) => {
