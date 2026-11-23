@@ -1,9 +1,5 @@
-interface FnParam {
-  [key: string]: string | number
-};
-
-export interface TableConfigItem {
+export interface TableConfigItem<T> {
   label: string,
-  render: (obj: FnParam) => string | number,
-  sortValue?: (obj: FnParam) => string | number
+  render: (obj: T) => string | number,
+  sortValue?: (obj: T) => string | number
 };
