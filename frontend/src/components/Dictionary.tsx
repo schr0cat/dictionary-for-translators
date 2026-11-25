@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Select from './Select';
-import Table from './Table';
+import SortableTable from './SortableTable';
 import { languagePares } from '../api/languagePares';
 import type { Word } from '../api/translateTableConfig';
 import { translateTableConfig } from '../api/translateTableConfig';
@@ -38,7 +38,7 @@ function Dictionary() {
 
     {
       words &&
-      <Table
+      <SortableTable
         data={words}
         config={translateTableConfig}
         keyFn={keyFn}
