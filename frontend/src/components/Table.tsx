@@ -7,7 +7,6 @@ function Table<T extends object>({
   keyFn
 }: TableProps<T>) {
   const renderedHeaders = config.map((column) => {
-    // TODO: сделать так, чтобы в интерфейсе config было опциональное свойство header
     if (column.header) {
       return <Fragment key={column.label}>
         {column.header()}

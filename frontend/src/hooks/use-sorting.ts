@@ -31,21 +31,26 @@ export function useSorting<T>(
 
   let sortedData = data;
 
-  if (sortOrder && sortBy) {
-    // TODO: выяснить, почему ts не понимает, что в объектах массива config есть опциональное свойство sortValue
-    const { sortValue } = config.find(column => column.label === sortBy);
+  const sortValue = config.find(
+    column => column.label === sortBy
+  )?.sortValue;
 
+  if (sortOrder && sortBy && sortValue) {
     sortedData = [...data].sort((a, b) => {
       const valueA = sortValue(a);
       const valueB = sortValue(b);
 
       const reverseOrder = sortOrder === 'asc' ? 1 : -1;
 
-      if (typeof valueA === 'string') {
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
         return valueA.localeCompare(valueB) * reverseOrder;
       };
 
-      return (valueA - valueB) * reverseOrder;
+      if (typeof valueA === 'number' && typeof valueB === 'number') {
+        return (valueA - valueB) * reverseOrder;
+      }
+
+      throw new Error('Значения сортируемого столбца имеют разные типы');
     });
   };
 

@@ -1,6 +1,7 @@
 import Table from './Table';
 import { useSorting } from '../hooks/use-sorting';
 import type { TableProps } from '../api/TableProps';
+import { VscTriangleUp, VscTriangleDown } from "react-icons/vsc";
 
 // type SortableTableProps<T extends object> = Omit<TableProps<T>, 'keyFn'>
 // Данный интерфейс наследует все свойства интерфейса TableProps, кроме свойства keyFn
@@ -8,7 +9,8 @@ import type { TableProps } from '../api/TableProps';
 function SortableTable<T extends object>({
   config,
   data,
-  keyFn
+  keyFn,
+  ...rest
 }: TableProps<T>) {
   const { 
     sortBy, 
@@ -22,8 +24,6 @@ function SortableTable<T extends object>({
       return column;
     };
 
-    // TODO: дописать код для отображения маркеров сортировки
-
     return {
       ...column,
       header: () => {
@@ -32,6 +32,7 @@ function SortableTable<T extends object>({
           onClick={() => setSortColumn(column.label)}
         >
           <div className='flex items-center gap-2'>
+            {getIcons(column.label, sortBy, sortOrder)}
             {column.label}
           </div>
         </th>
@@ -41,9 +42,31 @@ function SortableTable<T extends object>({
 
   console.log(sortBy);
 
-  // TODO: определить, нужно ли мне передавать keyFn таким образом, как сейчас, или нужно использовать объект props, декомпозицию которого я должен передавать в Table. Выяснить, что из этого логичнее
+  return <Table {...rest} keyFn={keyFn} data={sortedData} config={updatedConfig} />
+};
 
-  return <Table keyFn={keyFn} data={sortedData} config={updatedConfig} />
-}
+function getIcons(label: string, sortBy: string | null, sortOrder: string | null) {
+  if (label !== sortBy) {
+    return <div>
+      <VscTriangleUp />
+      <VscTriangleDown />
+    </div>
+  };
+
+  if (sortOrder === 'asc') {
+    return <div>
+      <VscTriangleUp />
+    </div>
+  } else if (sortOrder === 'desc') {
+    return <div>
+      <VscTriangleDown />
+    </div>
+  } else {
+    return <div>
+      <VscTriangleUp />
+      <VscTriangleDown />
+    </div>
+  };
+};
 
 export default SortableTable;
