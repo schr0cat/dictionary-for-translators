@@ -1,4 +1,4 @@
-import { createContext, useEffect, useCallback } from 'react';
+import { createContext, useEffect } from 'react';
 import { setUser, setStatus } from '../store'
 import { useDispatch, useSelector } from 'react-redux';
 import type { AuthSliceType } from '../store/slices/authSlice';
