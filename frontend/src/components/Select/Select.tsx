@@ -1,26 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
-import type { FieldPath, FieldValues, UseFormRegister } from "react-hook-form";
-import type { SelectOption } from '../api/SelectOption';
+import type { SelectOption } from '../../api/SelectOption';
+import { useDispatch } from 'react-redux';
+import type { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 
 
-interface SelectProps<T extends FieldValues> {
+interface SelectProps {
   options: SelectOption[],
-  register?: UseFormRegister<T>,
-  label?: FieldPath<T>,
-  required?: boolean,
+  setterFunc: ActionCreatorWithPayload<string>
 };
 
-function Select<T extends FieldValues>({
+function Select({
   options,
-  register,
-  label,
-  required,
+  setterFunc,
   ...rest
- }: SelectProps<T>) {
+ }: SelectProps) {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  
   const divEl = useRef<HTMLDivElement | null>(null);
 
   // Если селект открыт и пользователь нажимает в любом месте сайта вне области селекта, этот селект закроется
@@ -58,19 +55,14 @@ function Select<T extends FieldValues>({
     'px-2 py-3 border-2 border-gray-100 rounded-md w-fit cursor-pointer'
   ));
 
-  // Если select не внутри формы
-  let reg;
-
-  if (label) {
-    reg = register ? register(label, {required}) : undefined;
-  };
+  // TODO: решить проблемы с TS в файлах Select, Dictionary, FormSelect
 
   return <div ref={divEl}>
       <select
         {...rest}
         className={classes} 
         onClick={() => setIsOpen(!isOpen)}
-        {...reg}
+        onChange={(e) => dispatch(setterFunc(e.target.value))}
       >
         <option value=''>Выбрать...</option>
 

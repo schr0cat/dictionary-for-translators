@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import Select from './Select';
+import Select from './Select/Select';
 import SortableTable from './SortableTable';
 import { languagePares } from '../api/languagePares';
 import type { Word } from '../api/translateTableConfig';
 import { translateTableConfig } from '../api/translateTableConfig';
+import { setPare } from '../store';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store';
 
 function Dictionary() {
   const [words, setWords] = useState<Word[] | null>(null);
+  const { currentPare } = useSelector((state: RootState) => state.languagePare)
 
   const getWords = async () => {
     try {
@@ -22,6 +26,8 @@ function Dictionary() {
     };
   };
 
+  console.log(currentPare);
+
   useEffect(() => {
     // eslint-disable-next-line
     getWords();
@@ -34,7 +40,7 @@ function Dictionary() {
   return <div>
     <h2>Выберите языковую пару</h2>
 
-    <Select options={languagePares} />
+    <Select options={languagePares} setterFunc={setPare} />
 
     {
       words &&

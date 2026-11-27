@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setUser, setStatus, authReducer } from './slices/authSlice';
+import { setPare, languagePareReducer } from './slices/languagePareSlice';
 
 const store = configureStore({
   reducer: {
-    auth: authReducer
+    auth: authReducer,
+    languagePare: languagePareReducer
   }
 });
 
-export { store, setUser, setStatus };
+export { store, setUser, setStatus, setPare };
+export type RootState = ReturnType<typeof store.getState>;

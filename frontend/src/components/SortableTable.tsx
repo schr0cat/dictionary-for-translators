@@ -40,8 +40,6 @@ function SortableTable<T extends object>({
     };
   });
 
-  console.log(sortBy);
-
   return <Table {...rest} keyFn={keyFn} data={sortedData} config={updatedConfig} />
 };
 
