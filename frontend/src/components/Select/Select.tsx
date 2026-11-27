@@ -2,18 +2,21 @@ import { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
 import type { SelectOption } from '../../api/SelectOption';
+import { useDispatch } from 'react-redux';
 
 
 interface SelectProps {
   options: SelectOption[],
+  setterFunc: (value: string) => string
 };
 
 function Select({
   options,
+  setterFunc,
   ...rest
  }: SelectProps) {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  
   const divEl = useRef<HTMLDivElement | null>(null);
 
   // Если селект открыт и пользователь нажимает в любом месте сайта вне области селекта, этот селект закроется
@@ -56,6 +59,7 @@ function Select({
         {...rest}
         className={classes} 
         onClick={() => setIsOpen(!isOpen)}
+        onChange={(e) => dispatch(setterFunc(e.target.value))}
       >
         <option value=''>Выбрать...</option>
 

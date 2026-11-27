@@ -4,9 +4,12 @@ import SortableTable from './SortableTable';
 import { languagePares } from '../api/languagePares';
 import type { Word } from '../api/translateTableConfig';
 import { translateTableConfig } from '../api/translateTableConfig';
+import { setPare } from '../store';
+import { useSelector } from 'react-redux';
 
 function Dictionary() {
   const [words, setWords] = useState<Word[] | null>(null);
+  const { currentPare } = useSelector((state) => state.languagePare)
 
   const getWords = async () => {
     try {
@@ -22,6 +25,8 @@ function Dictionary() {
     };
   };
 
+  console.log(currentPare);
+
   useEffect(() => {
     // eslint-disable-next-line
     getWords();
@@ -36,7 +41,7 @@ function Dictionary() {
 
     {/* TODO: сделать так, чтобы при выборе языковой пары, клиент получал разные слова с сервера, которые подходят именно под указанную языковую пару, а не все подряд */}
 
-    <Select options={languagePares} />
+    <Select options={languagePares} setterFunc={setPare} />
 
     {
       words &&
