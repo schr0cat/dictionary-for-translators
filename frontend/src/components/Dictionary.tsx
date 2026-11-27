@@ -6,10 +6,11 @@ import type { Word } from '../api/translateTableConfig';
 import { translateTableConfig } from '../api/translateTableConfig';
 import { setPare } from '../store';
 import { useSelector } from 'react-redux';
+import type { RootState } from '../store';
 
 function Dictionary() {
   const [words, setWords] = useState<Word[] | null>(null);
-  const { currentPare } = useSelector((state) => state.languagePare)
+  const { currentPare } = useSelector((state: RootState) => state.languagePare)
 
   const getWords = async () => {
     try {
@@ -38,8 +39,6 @@ function Dictionary() {
 
   return <div>
     <h2>Выберите языковую пару</h2>
-
-    {/* TODO: сделать так, чтобы при выборе языковой пары, клиент получал разные слова с сервера, которые подходят именно под указанную языковую пару, а не все подряд */}
 
     <Select options={languagePares} setterFunc={setPare} />
 

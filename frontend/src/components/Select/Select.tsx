@@ -3,11 +3,12 @@ import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
 import type { SelectOption } from '../../api/SelectOption';
 import { useDispatch } from 'react-redux';
+import type { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 
 
 interface SelectProps {
   options: SelectOption[],
-  setterFunc: (value: string) => string
+  setterFunc: ActionCreatorWithPayload<string>
 };
 
 function Select({
@@ -53,6 +54,8 @@ function Select({
   const classes: string = classNames(twMerge(
     'px-2 py-3 border-2 border-gray-100 rounded-md w-fit cursor-pointer'
   ));
+
+  // TODO: решить проблемы с TS в файлах Select, Dictionary, FormSelect
 
   return <div ref={divEl}>
       <select

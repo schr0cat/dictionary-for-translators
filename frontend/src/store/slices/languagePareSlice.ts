@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface LanguagePareSliceType {
+export interface LanguagePareSliceType {
   currentPare: string | null
 };
 
