@@ -1,24 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
-import type { FieldPath, FieldValues, UseFormRegister } from "react-hook-form";
-import type { SelectOption } from '../api/SelectOption';
+import type { SelectOption } from '../../api/SelectOption';
 
 
-interface SelectProps<T extends FieldValues> {
+interface SelectProps {
   options: SelectOption[],
-  register?: UseFormRegister<T>,
-  label?: FieldPath<T>,
-  required?: boolean,
 };
 
-function Select<T extends FieldValues>({
+function Select({
   options,
-  register,
-  label,
-  required,
   ...rest
- }: SelectProps<T>) {
+ }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   
   const divEl = useRef<HTMLDivElement | null>(null);
@@ -58,19 +51,11 @@ function Select<T extends FieldValues>({
     'px-2 py-3 border-2 border-gray-100 rounded-md w-fit cursor-pointer'
   ));
 
-  // Если select не внутри формы
-  let reg;
-
-  if (label) {
-    reg = register ? register(label, {required}) : undefined;
-  };
-
   return <div ref={divEl}>
       <select
         {...rest}
         className={classes} 
         onClick={() => setIsOpen(!isOpen)}
-        {...reg}
       >
         <option value=''>Выбрать...</option>
 

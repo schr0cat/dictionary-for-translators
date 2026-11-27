@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Select from './Select';
+import Select from './Select/Select';
 import SortableTable from './SortableTable';
 import { languagePares } from '../api/languagePares';
 import type { Word } from '../api/translateTableConfig';

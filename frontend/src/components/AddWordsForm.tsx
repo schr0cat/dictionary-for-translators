@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form'
-import Select from './Select';
+import FormSelect from './Select/FormSelect';
 import { languages } from '../api/languages';
 
 interface AddWordsFormInput {
@@ -55,7 +55,7 @@ function AddWordsForm() {
     <fieldset>
       <label>Выберите исходный язык</label>
 
-      <Select
+      <FormSelect
         label='originLang'
         register={register}
         options={languages}
@@ -69,7 +69,7 @@ function AddWordsForm() {
 
       <label>Выберите язык перевода</label>
 
-      <Select
+      <FormSelect
         label='translateLang'
         register={register}
         options={languages}
